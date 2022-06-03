@@ -1,23 +1,29 @@
+// Packages
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// CSS & Servcices
 import './App.css';
+
+// Routes
+import IndexRoute from './Index/IndexRoute';
+import VideoPlayerRoute from './videoPlayer/videoPlayer';
+
+document.title = "PlayShare";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <header className="App-header">
+      <BrowserRouter>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<IndexRoute />} />
+            <Route path="/session" element={<VideoPlayerRoute />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </header>
   );
 }
 
