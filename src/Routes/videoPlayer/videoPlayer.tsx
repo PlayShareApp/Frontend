@@ -13,16 +13,16 @@ import SocketBackend from '../../services/wsBackend';
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
 
 const hTTPBackend = new HTTPBackend();
-new SocketBackend();
+var player: any;
+
+const socketBackend = new SocketBackend()
 
 const VideoPlayerRoute = () => {
-    function init() {
-        let roomid: any = room_id
-        let userid: any = localStorage.getItem('localUserID');
-
-        hTTPBackend.joinRoom(roomid, userid);
-    }
-
+    /** 
+     * @description Array for Params
+     */
+    const { room_id } = useParams();
+    
     /**
      * @name opts
      * @description Options for the YouTube player
@@ -34,17 +34,32 @@ const VideoPlayerRoute = () => {
             controls: 1,
             autoplay: 1
         }
-    };
+    };  
+    
+    /**
+     * @name init
+     * @description Gets called once the DOM is loaded. Connects user to the room.
+     */
+    async function init() {
+        let roomid: any = room_id
+        let userid: any = socketBackend.user_id;
 
-    const { room_id } = useParams();
+        await socketBackend.setPlayer(player);
+        await hTTPBackend.joinRoom(roomid, userid);
+    }
+
 
     /**
      * @name onReady
      * @description Callback when the YouTube player is ready
      * @param event 
+     * player.seekTo(s);
+     * player.pauseVideo();
+     * player.playVideo();
      */
     function _onReady(event: any): void {
-        console.log(event)
+        player = event.target;
+        global.player = player
     }
 
     /**
@@ -58,7 +73,6 @@ const VideoPlayerRoute = () => {
 
     return (
         <div className="VideoPlayerRoute" onLoad={init}>
-            <h1>{room_id}</h1>
             <NavbarComponent />
             <YouTube
                 className='videoPlayer'
