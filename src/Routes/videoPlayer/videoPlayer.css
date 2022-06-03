@@ -1,0 +1,6 @@
+.VideoPlayerRoute .videoPlayer{
+    margin: 20px;
+    text-align: center;
+    max-height: 480px;
+    max-width: 854px;
+}

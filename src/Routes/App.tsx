@@ -19,7 +19,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<IndexRoute />} />
-            <Route path="/session" element={<VideoPlayerRoute />} />
+            <Route path="/session/:room_id" element={<VideoPlayerRoute />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -1,35 +1,49 @@
 // Packages
 import React from 'react';
-import YouTube from "react-youtube";
+import YouTube, { YouTubeProps } from 'react-youtube';
+import { useParams } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
 
 // CSS & Servcices
 import './videoPlayer.css';
+import HTTPBackend from '../../services/httpBackend';
+import SocketBackend from '../../services/wsBackend';
 
 // else
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
 
-export default class VideoPlayerRoute extends React.Component {
+const hTTPBackend = new HTTPBackend();
+new SocketBackend();
+
+const VideoPlayerRoute = () => {
+    function init() {
+        let roomid: any = room_id
+        let userid: any = localStorage.getItem('localUserID');
+
+        hTTPBackend.joinRoom(roomid, userid);
+    }
 
     /**
      * @name opts
      * @description Options for the YouTube player
      */
-    private opts: Object = {
+    let _opts: Object = {
         height: 480,
         width: 853,
         playerVars: {
             controls: 1,
             autoplay: 1
         }
-    }
+    };
+
+    const { room_id } = useParams();
 
     /**
      * @name onReady
      * @description Callback when the YouTube player is ready
      * @param event 
      */
-    private _onReady(event: any): void {
+    function _onReady(event: any): void {
         console.log(event)
     }
 
@@ -38,20 +52,23 @@ export default class VideoPlayerRoute extends React.Component {
      * @description Callback when the YouTube player state changes
      * @param event 
      */
-    private onStateChange(event: any): void {
-        console.log(event.target.getCurrentTime())
+    function _onStateChange(event: any): void {
+        console.log(event)
     }
 
-
-    render() {
-        return <div className="VideoPlayerRoute">
-            <NavbarComponent/>
+    return (
+        <div className="VideoPlayerRoute" onLoad={init}>
+            <h1>{room_id}</h1>
+            <NavbarComponent />
             <YouTube
-            className='videoPlayer'
-            opts={this.opts}
-            onReady={this._onReady}
-            onStateChange={this.onStateChange}
+                className='videoPlayer'
+                videoId='Np_YDbq9iBs'
+                opts={_opts}
+                onReady={_onReady}
+                onStateChange={_onStateChange}
             />
         </div>
-    }
+    )
 }
+
+export default VideoPlayerRoute;
