@@ -12,8 +12,6 @@ export default class SocketBackend {
     room_id: any;
 
     constructor() {
-        //this.player = player;
-
         if (this.mode == "development") {
             this.url = "ws://localhost:1213";
             console.log("Running in development mode.");
@@ -24,7 +22,7 @@ export default class SocketBackend {
 
         this.videoSocket = new WebSocket(this.url);
         this.videoSocket.onmessage = (event) => {
-            let data = JSON.parse(event.data);            
+            let data = JSON.parse(event.data);
 
             switch (data.METHOD_NAME) {
                 case "HELLO_WORLD":
@@ -48,7 +46,8 @@ export default class SocketBackend {
     }
 
     public setPlayer(player: any) {        
-        this.player = player;
+        console.log(player);
+        this.player = player
     }    
 
     private async HELLO_WORLD(data: any) {        
@@ -64,13 +63,13 @@ export default class SocketBackend {
     }
 
     private PLAY(data: any) {
-        console.log(this.player);
-        
-        this.player.playVideo()
+        this.player.playVideo();
+        console.log("PLAY");
     }
 
     private PAUSE(data: any) {
-        this.player.pauseVideo()
+        this.player.pauseVideo();
+        console.log("PAUSE");
     }
 
 }

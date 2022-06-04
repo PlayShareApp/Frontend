@@ -41,7 +41,6 @@ const VideoPlayerRoute = () => {
      */
     async function init() {
         if (typeof socketBackend.user_id !== "undefined") {
-            await socketBackend.setPlayer(player);        
             await hTTPBackend.joinRoom(room_id, socketBackend.user_id);
         } else {
             setTimeout(init, 250);
@@ -56,8 +55,9 @@ const VideoPlayerRoute = () => {
      * player.pauseVideo();
      * player.playVideo();
      */
-    function _onReady(event: any): void {
+    async function _onReady(event: any) {
         player = event.target;
+        await socketBackend.setPlayer(event.target);
         global.player = player
     }
 
@@ -74,6 +74,8 @@ const VideoPlayerRoute = () => {
     return (
         <div className="VideoPlayerRoute" onLoad={init}>
             <NavbarComponent />
+            <p>ROOM: {room_id}</p>
+            <p>USER: {socketBackend.user_id}</p>
             <YouTube
                 className='videoPlayer'
                 videoId='Np_YDbq9iBs'
