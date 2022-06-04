@@ -41,7 +41,11 @@ const VideoPlayerRoute = () => {
      */
     async function init() {
         if (typeof socketBackend.user_id !== "undefined") {
-            await hTTPBackend.joinRoom(room_id, socketBackend.user_id);
+            let response = await hTTPBackend.joinRoom(room_id, socketBackend.user_id);
+            if(response.status !== 200) {
+                alert(response.message);
+            }
+            
         } else {
             setTimeout(init, 250);
         }

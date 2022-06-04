@@ -42,6 +42,7 @@ export default class HTTPBackend {
             }
         });
         let response = await request.json()
+        
         return response
     }
 

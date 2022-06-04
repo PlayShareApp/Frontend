@@ -8,7 +8,7 @@ export default class SocketBackend {
     private videoSocket: WebSocket;
     private player: any;
 
-    public user_id: string; 
+    public user_id: string;
     room_id: any;
 
     constructor() {
@@ -23,6 +23,9 @@ export default class SocketBackend {
         this.videoSocket = new WebSocket(this.url);
         this.videoSocket.onmessage = (event) => {
             let data = JSON.parse(event.data);
+
+            console.log(data);
+            
 
             switch (data.METHOD_NAME) {
                 case "HELLO_WORLD":
@@ -40,17 +43,26 @@ export default class SocketBackend {
                 case "PAUSE":
                     this.PAUSE(data);
                     break;
+                case "VIDEO_CHANGE":
+                    this.VIDEO_CHANGE(data);
+                    break;
+                case "VIDEO_END":
+                    this.VIDEO_END(data);
+                    break;
+                case "BUFFEING":
+                    this.CHANGE_TIME(data);
+                    break;
             }
 
         }
     }
 
-    public setPlayer(player: any) {        
+    public setPlayer(player: any) {
         console.log(player);
         this.player = player
-    }    
+    }
 
-    private async HELLO_WORLD(data: any) {        
+    private async HELLO_WORLD(data: any) {
         this.user_id = data.PARAMS.id
     }
 
@@ -72,4 +84,17 @@ export default class SocketBackend {
         console.log("PAUSE");
     }
 
+    private VIDEO_CHANGE(data: any) {
+        alert("Not implemented");
+    }
+
+    private VIDEO_END(data: any) {
+        alert("Not implemented");
+    }
+
+    private CHANGE_TIME(data: any) {
+        this.player.seekTo(data.PARAMS.TME);
+        console.log(data.PARAMS.TIME);
+        
+    }
 }
