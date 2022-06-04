@@ -13,6 +13,7 @@ import SocketBackend from '../../services/wsBackend';
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
 
 var player: any;
+const hTTPBackend = new HTTPBackend();
 const socketBackend = new SocketBackend()
 
 const VideoPlayerRoute = () => {
@@ -41,7 +42,7 @@ const VideoPlayerRoute = () => {
     async function init() {
         if (typeof socketBackend.user_id !== "undefined") {
             await socketBackend.setPlayer(player);        
-            await HTTPBackend.joinRoom(room_id, socketBackend.user_id);
+            await hTTPBackend.joinRoom(room_id, socketBackend.user_id);
         } else {
             setTimeout(init, 250);
         }
