@@ -1,5 +1,5 @@
 // Packages
-import React from 'react';
+import React, { useEffect } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { useParams } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
@@ -12,9 +12,7 @@ import SocketBackend from '../../services/wsBackend';
 // else
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
 
-const hTTPBackend = new HTTPBackend();
 var player: any;
-
 const socketBackend = new SocketBackend()
 
 const VideoPlayerRoute = () => {
@@ -34,20 +32,20 @@ const VideoPlayerRoute = () => {
             controls: 1,
             autoplay: 1
         }
-    };  
-    
+    };
+
     /**
      * @name init
      * @description Gets called once the DOM is loaded. Connects user to the room.
      */
     async function init() {
-        let roomid: any = room_id
-        let userid: any = socketBackend.user_id;
-
-        await socketBackend.setPlayer(player);
-        await hTTPBackend.joinRoom(roomid, userid);
+        if (typeof socketBackend.user_id !== "undefined") {
+            await socketBackend.setPlayer(player);        
+            await HTTPBackend.joinRoom(room_id, socketBackend.user_id);
+        } else {
+            setTimeout(init, 250);
+        }
     }
-
 
     /**
      * @name onReady
@@ -68,8 +66,9 @@ const VideoPlayerRoute = () => {
      * @param event 
      */
     function _onStateChange(event: any): void {
-        console.log(event)
+        //console.log(event)
     }
+
 
     return (
         <div className="VideoPlayerRoute" onLoad={init}>

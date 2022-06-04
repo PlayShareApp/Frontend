@@ -1,3 +1,5 @@
+import HTTPBackend from "./httpBackend";
+
 export default class SocketBackend {
 
     private url!: string;
@@ -7,6 +9,7 @@ export default class SocketBackend {
     private player: any;
 
     public user_id: string; 
+    room_id: any;
 
     constructor() {
         //this.player = player;
@@ -44,22 +47,12 @@ export default class SocketBackend {
         }
     }
 
-    public get getUserId() : string {
-        console.log("Get method called");
-        
-        return this.user_id
-    }
-
-    public setPlayer(player: any) {
-        console.log("Setting player");
-        
+    public setPlayer(player: any) {        
         this.player = player;
-    }
-    
+    }    
 
     private async HELLO_WORLD(data: any) {        
         this.user_id = data.PARAMS.id
-        console.log(data.PARAMS.id);
     }
 
     private JOIN_ROOM(data: any) {
