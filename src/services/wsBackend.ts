@@ -13,16 +13,18 @@ export default class SocketBackend {
 
     constructor() {
         if (this.mode == "development") {
-            this.url = "ws://localhost:1213";
+            this.url = "ws://localhost:1214";
             console.log("Running in development mode.");
         } else if (this.mode == "production") {
-            this.url = "https://jnsaph.com/";
+            this.url = "wss://playshare.jnsaph.com/ws";
             console.log("Running in production mode.");
         }
 
         this.videoSocket = new WebSocket(this.url);
         this.videoSocket.onmessage = (event) => {
-            let data = JSON.parse(event.data);           
+            let data = JSON.parse(event.data);
+
+            console.info(data);
 
             switch (data.METHOD_NAME) {
                 case "HELLO_WORLD":
@@ -41,13 +43,13 @@ export default class SocketBackend {
                     this.PAUSE(data);
                     break;
                 case "CHANGE_VIDEO":
-                    this.CHANGE_VIDEO(data);
+                    this.CHANGE_VIDEO(data.PARAMS.VIDEO_ID);
                     break;
                 case "VIDEO_END":
                     this.VIDEO_END(data);
                     break;
                 case "CHANGE_TIME":
-                    this.CHANGE_TIME(data);
+                    this.CHANGE_TIME(data.PARAMS.TIME);
                     break;
             }
 
@@ -63,14 +65,26 @@ export default class SocketBackend {
     }
 
     private JOIN_ROOM(data: any) {
-        alert("NEW USER JOINED" + JSON.stringify(data));
+        //alert("NEW USER JOINED" + JSON.stringify(data));
+        this.CHANGE_TIME(this.player.getCurrentTime());
     }
 
-    private JOIN_ROOM_SUCCESS(data: any) {
+    private async JOIN_ROOM_SUCCESS(data: any) {
+        if (typeof this.player !== "undefined") {
+            let currentVideo = data.PARAMS.CURRENT_VIDEO;
+            let currentTime = data.PARAMS.CURRENT_TIME;
+    
+            if (currentVideo) await this.CHANGE_VIDEO(currentVideo);
+            if (currentTime) await this.CHANGE_TIME(currentTime);
+        } else {
+            setTimeout(() => {
+                this.JOIN_ROOM_SUCCESS(data);
+            }, 250);
+        }
+
     }
 
     private PLAY(data: any) {
-        let time: number = data.PARAMS.TIME;
         this.player.playVideo();
     }
 
@@ -78,18 +92,18 @@ export default class SocketBackend {
         this.player.pauseVideo();
     }
 
-    private CHANGE_VIDEO(data: any) {
-        let video: string = data.PARAMS.VIDEO_ID;
-        this.player.cueVideoById(video);
+    private CHANGE_VIDEO(video: any) {
+        alert("Changed Video")
+        console.log(this.player);
         
+        this.player.cueVideoById(video);
     }
 
     private VIDEO_END(data: any) {
         alert("Not implemented");
     }
 
-    private CHANGE_TIME(data: any) {
-        let time: number = data.PARAMS.TIME;
+    private CHANGE_TIME(time: any) {
         this.player.seekTo(time);        
     }
 }

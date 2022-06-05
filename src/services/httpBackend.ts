@@ -5,7 +5,7 @@ if (mode == "development") {
     url = "http://localhost:3002/a/";
     console.log("Running in development mode.");
 } else if (mode == "production") {
-    url = "https://jnsaph.com/";
+    url = "https://playshare.jnsaph.com/a/";
     console.log("Running in production mode.");
 }
 export default  {
@@ -38,6 +38,7 @@ export default  {
                 "user_id": user_id
             }
         });
+        console.log(request)
         let response = await request.json()
         
         return response
