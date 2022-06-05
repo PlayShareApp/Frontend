@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { useParams } from 'react-router-dom';
-import { Button, Navbar, Container } from 'react-bootstrap';
+import { Button, Navbar, Container, Col, Row } from 'react-bootstrap';
 
 // CSS & Servcices
 import './videoPlayer.css';
@@ -13,14 +13,14 @@ import SocketBackend from '../../services/wsBackend';
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
 import httpBackend from '../../services/httpBackend';
 
-var player: any;
-const socketBackend = new SocketBackend()
 
 const VideoPlayerRoute = () => {
     /** 
      * @description Array for Params
      */
+    const socketBackend = new SocketBackend()
     const { room_id } = useParams();
+    var player: any;
 
     /**
      * @name opts
@@ -71,8 +71,9 @@ const VideoPlayerRoute = () => {
      */
     async function _onReady(event: any) {
         player = event.target;
+        global.player = player;
+                
         await socketBackend.setPlayer(event.target);
-        global.player = player
     }
 
     /**
@@ -83,17 +84,9 @@ const VideoPlayerRoute = () => {
     function _onStateChange(event: any): void {
         let time: Number = event.target.getCurrentTime();
         console.log(event);
-        
+
 
         switch (event.data) {
-            case -1:
-                // VIDEO_CHANGE
-
-                break;
-            case 0:
-                // VIDEO_END
-
-                break;
             case 1:
                 // PLAY
                 httpBackend.changeState(room_id, socketBackend.user_id, false);
@@ -112,16 +105,30 @@ const VideoPlayerRoute = () => {
 
     return (
         <div className="VideoPlayerRoute" onLoad={init}>
-            <input id="videoID" placeholder='VIDEO ID'/>
-            <button onClick={changeVideo}>CHANGE</button>
             <NavbarComponent />
-            <YouTube
-                className='videoPlayer'
-                videoId='5mGuCdlCcNM'
-                opts={_opts}
-                onReady={_onReady}
-                onStateChange={_onStateChange}
-            />
+                
+                <div className="urlInputArea">
+                    <input id="videoID" placeholder='Youtube Video URL'/>
+                    <button onClick={changeVideo}>BTN</button>
+                </div>
+
+
+            <Container>
+                <Row>
+                    <Col>
+                        <YouTube
+                            className='videoPlayer'
+                            videoId='5mGuCdlCcNM'
+                            opts={_opts}
+                            onReady={_onReady}
+                            onStateChange={_onStateChange}/>
+                            <h1>ab</h1>
+                    </Col>
+                    <Col>
+                        2 of 2
+                    </Col>
+                </Row>
+            </Container>
         </div>
     )
 }
