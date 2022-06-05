@@ -22,10 +22,7 @@ export default class SocketBackend {
 
         this.videoSocket = new WebSocket(this.url);
         this.videoSocket.onmessage = (event) => {
-            let data = JSON.parse(event.data);
-
-            console.log(data);
-            
+            let data = JSON.parse(event.data);           
 
             switch (data.METHOD_NAME) {
                 case "HELLO_WORLD":
@@ -43,13 +40,13 @@ export default class SocketBackend {
                 case "PAUSE":
                     this.PAUSE(data);
                     break;
-                case "VIDEO_CHANGE":
-                    this.VIDEO_CHANGE(data);
+                case "CHANGE_VIDEO":
+                    this.CHANGE_VIDEO(data);
                     break;
                 case "VIDEO_END":
                     this.VIDEO_END(data);
                     break;
-                case "BUFFEING":
+                case "CHANGE_TIME":
                     this.CHANGE_TIME(data);
                     break;
             }
@@ -58,7 +55,6 @@ export default class SocketBackend {
     }
 
     public setPlayer(player: any) {
-        console.log(player);
         this.player = player
     }
 
@@ -75,17 +71,18 @@ export default class SocketBackend {
     }
 
     private PLAY(data: any) {
+        let time: number = data.PARAMS.TIME;
         this.player.playVideo();
-        console.log("PLAY");
     }
 
     private PAUSE(data: any) {
         this.player.pauseVideo();
-        console.log("PAUSE");
     }
 
-    private VIDEO_CHANGE(data: any) {
-        alert("Not implemented");
+    private CHANGE_VIDEO(data: any) {
+        let video: string = data.PARAMS.VIDEO_ID;
+        this.player.cueVideoById(video);
+        
     }
 
     private VIDEO_END(data: any) {
@@ -93,8 +90,7 @@ export default class SocketBackend {
     }
 
     private CHANGE_TIME(data: any) {
-        this.player.seekTo(data.PARAMS.TME);
-        console.log(data.PARAMS.TIME);
-        
+        let time: number = data.PARAMS.TIME;
+        this.player.seekTo(time);        
     }
 }

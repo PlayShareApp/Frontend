@@ -9,9 +9,6 @@ if (mode == "development") {
     console.log("Running in production mode.");
 }
 export default  {
-
-
-
     /**
      * @name createRoom
      * @description Used to create a room on the backend.
@@ -75,26 +72,26 @@ export default  {
      * @param time 
      * @returns 
      */
-    async changeTime(room_id: string, user_id: string, time: string) {
-        let request = await fetch(url + "change_v", {
+    async changeTime(room_id: string, user_id: string, time: Number) {
+        let request = await fetch(url + "change_t", {
             method: "POST",
             headers: {
                 "room_id": room_id,
                 "user_id": user_id,
-                "time": time
+                "time": <string><unknown>time
             }
         });
         let response = await request.json()
         return response
     },
 
-    changeState(room_id: string, user_id: string, state: string) {
+    changeState(room_id: string, user_id: string, state: Boolean) {
         let request = fetch(url + "change_s", {
             method: "POST",
             headers: {
                 "room_id": room_id,
                 "user_id": user_id,
-                "state": state
+                "state": <string><unknown>state,
             }
         });
         return request

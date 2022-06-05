@@ -11,6 +11,7 @@ import SocketBackend from '../../services/wsBackend';
 
 // else
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
+import httpBackend from '../../services/httpBackend';
 
 var player: any;
 const socketBackend = new SocketBackend()
@@ -20,7 +21,7 @@ const VideoPlayerRoute = () => {
      * @description Array for Params
      */
     const { room_id } = useParams();
-    
+
     /**
      * @name opts
      * @description Options for the YouTube player
@@ -41,10 +42,10 @@ const VideoPlayerRoute = () => {
     async function init() {
         if (typeof socketBackend.user_id !== "undefined") {
             let response = await hTTPBackend.joinRoom(room_id, socketBackend.user_id);
-            if(response.status !== 200) {
+            if (response.status !== 200) {
                 alert(response.message);
             }
-            
+
         } else {
             setTimeout(init, 250);
         }
@@ -70,18 +71,38 @@ const VideoPlayerRoute = () => {
      * @param event 
      */
     function _onStateChange(event: any): void {
-        //console.log(event)
+        switch (event.data) {
+            case -1:
+                // VIDEO_CHANGE
+
+                break;
+            case 0:
+                // VIDEO_END
+
+                break;
+            case 1:
+                // PLAY
+                httpBackend.changeState(room_id, socketBackend.user_id, false);
+                break;
+            case 2:
+                // PAUSE
+                httpBackend.changeState(room_id, socketBackend.user_id, true);
+                break;
+            case 3:
+                let time: Number = event.target.getCurrentTime();
+                httpBackend.changeTime(room_id, socketBackend.user_id, time);
+                // CHANGE_TIME
+                break;
+        }
     }
 
 
     return (
         <div className="VideoPlayerRoute" onLoad={init}>
             <NavbarComponent />
-            <p>ROOM: {room_id}</p>
-            <p>USER: {socketBackend.user_id}</p>
             <YouTube
                 className='videoPlayer'
-                videoId='Np_YDbq9iBs'
+                videoId='5mGuCdlCcNM'
                 opts={_opts}
                 onReady={_onReady}
                 onStateChange={_onStateChange}
