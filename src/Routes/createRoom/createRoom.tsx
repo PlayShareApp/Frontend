@@ -8,14 +8,11 @@ import hTTPBackend from '../../services/httpBackend';
 export default class CreateRoomRoute extends React.Component {
     private async _createRoom () {
         let response = await hTTPBackend.createRoom()
-        console.log(response);
-        
+        window.location.href = '/session/' + response.roomID;
     }
-        // 
-
 
     render() {
-        return <div className="CreateRoom">
+        return <div className="CreateRoom" onLoad={this._createRoom}>
             <NavbarComponent/>
             <div className='mainContent'>
                 <h1 className='header'>PlayShare</h1>
