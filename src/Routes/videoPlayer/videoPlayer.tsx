@@ -6,14 +6,13 @@ import { Button, Navbar, Container } from 'react-bootstrap';
 
 // CSS & Servcices
 import './videoPlayer.css';
-import HTTPBackend from '../../services/httpBackend';
+import hTTPBackend from '../../services/httpBackend';
 import SocketBackend from '../../services/wsBackend';
 
 // else
 import NavbarComponent from '../Components/Navbar/NavbarComponent';
 
 var player: any;
-const hTTPBackend = new HTTPBackend();
 const socketBackend = new SocketBackend()
 
 const VideoPlayerRoute = () => {

@@ -9,6 +9,7 @@ import './App.css';
 // Routes
 import IndexRoute from './Index/IndexRoute';
 import VideoPlayerRoute from './videoPlayer/videoPlayer';
+import CreateRoomRoute from './createRoom/createRoom';
 
 document.title = "PlayShare";
 
@@ -19,6 +20,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<IndexRoute />} />
+            <Route path="/createRoom" element={<CreateRoomRoute />} />
             <Route path="/session/:room_id" element={<VideoPlayerRoute />} />
           </Routes>
         </div>
