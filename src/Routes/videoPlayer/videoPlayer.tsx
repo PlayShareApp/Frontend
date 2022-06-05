@@ -51,6 +51,16 @@ const VideoPlayerRoute = () => {
         }
     }
 
+    async function changeVideo() {
+        let input = document.getElementById("videoID") as HTMLInputElement;
+        let video_id = input.value;
+        let response = await hTTPBackend.changeVideo(room_id, socketBackend.user_id, video_id);
+        if (response.status !== 200) {
+            alert(response.message);
+            console.log(response);
+        }
+    }
+
     /**
      * @name onReady
      * @description Callback when the YouTube player is ready
@@ -71,6 +81,10 @@ const VideoPlayerRoute = () => {
      * @param event 
      */
     function _onStateChange(event: any): void {
+        let time: Number = event.target.getCurrentTime();
+        console.log(event);
+        
+
         switch (event.data) {
             case -1:
                 // VIDEO_CHANGE
@@ -89,7 +103,6 @@ const VideoPlayerRoute = () => {
                 httpBackend.changeState(room_id, socketBackend.user_id, true);
                 break;
             case 3:
-                let time: Number = event.target.getCurrentTime();
                 httpBackend.changeTime(room_id, socketBackend.user_id, time);
                 // CHANGE_TIME
                 break;
@@ -99,6 +112,8 @@ const VideoPlayerRoute = () => {
 
     return (
         <div className="VideoPlayerRoute" onLoad={init}>
+            <input id="videoID" placeholder='VIDEO ID'/>
+            <button onClick={changeVideo}>CHANGE</button>
             <NavbarComponent />
             <YouTube
                 className='videoPlayer'

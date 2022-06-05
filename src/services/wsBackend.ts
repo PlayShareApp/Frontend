@@ -67,7 +67,6 @@ export default class SocketBackend {
     }
 
     private JOIN_ROOM_SUCCESS(data: any) {
-        alert("YOU JOINED A ROOM");
     }
 
     private PLAY(data: any) {
